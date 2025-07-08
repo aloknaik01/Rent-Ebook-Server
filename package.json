@@ -1,0 +1,11 @@
+{
+  "name": "rent-ebook",
+  "version": "1.0.0",
+  "description": "Rent-Ebook is Platform where you can rent you book or buy/sell you Ebook",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alok kumar Naik <aloknaik016261@gmail.com>",
+  "license": "ISC"
+}
