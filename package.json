@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Rent-Ebook is Platform where you can rent you book or buy/sell you Ebook",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon server.js"
   },
