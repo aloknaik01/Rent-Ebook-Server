@@ -2,11 +2,9 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import cors from 'cors';
 import { config } from './config/config.js';
+import { connecToDb } from './database/db.js';
 export const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser);
 app.use(
   cors({
     origin: [config.portfolio_url],
@@ -14,3 +12,10 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser);
+
+
+connecToDb();
