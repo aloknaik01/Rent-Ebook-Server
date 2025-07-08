@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { config } from './config/config.js';
 import { connecToDb } from './database/db.js';
+import { errorMiddleware } from './middlewares/error.middleware.js';
 export const app = express();
 
 app.use(
@@ -17,5 +18,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser);
 
-
 connecToDb();
+
+app.use(errorMiddleware);
