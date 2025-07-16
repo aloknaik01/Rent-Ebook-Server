@@ -1,4 +1,4 @@
-import mongoose, { Mongoose } from 'mongoose';
+import mongoose, { Mongoose } from "mongoose";
 
 const useSchema = new mongoose.Schema(
   {
@@ -19,8 +19,8 @@ const useSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['Admin', 'User'],
-      default: 'User',
+      enum: ["Admin", "User"],
+      default: "User",
     },
     accountVerified: {
       type: Boolean,
@@ -30,7 +30,7 @@ const useSchema = new mongoose.Schema(
       {
         bookId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'Borrow',
+          ref: "Borrow",
         },
         returned: {
           type: Boolean,
@@ -56,4 +56,19 @@ const useSchema = new mongoose.Schema(
   }
 );
 
-export const User = Mongoose.model('User', useSchema);
+useSchema.methods.generateVerificationCode = () => {
+  function gneraeteRandom5digitCode() {
+    const firstDigit = Math.floor(Math.random() * 9) + 1;
+    const restDigits = Math.floor(Math.random() * 1000)
+      .toString()
+      .padStart(4, 0);
+
+    return parseInt(firstDigit + restDigits);
+  }
+  const verificationCode = gneraeteRandom5digitCode();
+  this.verificationCode = verificationCode;
+  this.verificationCodeExpire = Date.now() + 15 * 60 * 1000;
+
+  return verificationCode;
+};
+export const User = Mongoose.model("User", useSchema);
