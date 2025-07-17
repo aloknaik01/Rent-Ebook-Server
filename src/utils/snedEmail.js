@@ -1,18 +1,18 @@
 import nodemailer from 'nodemailer';
-
+import { config } from '../config/config.js';
 export async function snedEmail({ email, subject, message }) {
   const transpoter = nodemailer.createTransport({
-    host: smtp_host,
-    service: smtp_service,
-    port: sptp_port,
+    host: config.smtp_host,
+    service: config.smtp_service,
+    port: config.sptp_port,
     auth: {
-      user: smtp_user,
-      pass: smtp_password,
+      user: config.smtp_user,
+      pass: config.smtp_password,
     },
   });
 
   const mailOption = {
-    from: smtp_email,
+    from: config.smtp_email,
     to: email,
     subject,
     html: message,
