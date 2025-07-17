@@ -5,6 +5,7 @@ import { config } from './config/config.js';
 import { connecToDb } from './database/db.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
 export const app = express();
+import AuthRouter from './routes/auth.route.js';
 
 app.use(
   cors({
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser);
 
+app.use('/auth', AuthRouter);
 connecToDb();
 
 app.use(errorMiddleware);
