@@ -1,3 +1,6 @@
+import { generateVOtpTemplate } from "./emailTemplate.js";
+import { snedEmail } from "./snedEmail.js";
+
 export async function sendVerificationCode(verificationCode, email, res) {
   try {
     const vCode = generateVOtpTemplate(verificationCode);
