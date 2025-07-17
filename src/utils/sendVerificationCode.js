@@ -8,10 +8,9 @@ export async function sendVerificationCode(verificationCode, email, res) {
     });
 
     res.status(200).json({
-        success: true,
-        message: "verification code send successfully!".
+      success: true,
+      message: 'verification code send successfully!',
     });
-
   } catch (error) {
     res.status(500).jon({
       success: false,
