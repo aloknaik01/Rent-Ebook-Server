@@ -1,6 +1,3 @@
-import { generateVOtpTemplate } from "./emailTemplate.js";
-import { snedEmail } from "./snedEmail.js";
-
 export async function sendVerificationCode(verificationCode, email, res) {
   try {
     const vCode = generateVOtpTemplate(verificationCode);
@@ -12,7 +9,7 @@ export async function sendVerificationCode(verificationCode, email, res) {
 
     res.status(200).json({
         success: true,
-        message: "verification code send successfully!".
+        message: "Verification code send successfully!".
     });
 
   } catch (error) {
