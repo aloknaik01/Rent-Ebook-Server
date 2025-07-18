@@ -7,7 +7,7 @@ export async function sendVerificationCode(verificationCode, email, res) {
     snedEmail({
       email,
       subject: 'verification code',
-      messgage,
+      vCode,
     });
 
     res.status(200).json({
@@ -15,9 +15,9 @@ export async function sendVerificationCode(verificationCode, email, res) {
       message: 'verification code send successfully!',
     });
   } catch (error) {
-    res.status(500).jon({
+    res.status(500).json({
       success: false,
-      messgage: 'Failed to send verification code!',
+      messgage: `Failed to send verification code! ${error}`,
     });
   }
 }

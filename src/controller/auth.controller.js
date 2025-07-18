@@ -2,16 +2,17 @@ import { catchError } from '../middlewares/catchError.js';
 import ErrorHandler from '../middlewares/error.middleware.js';
 import { User } from '../models/user.model.js';
 import bcrypt from 'bcrypt';
+import { sendVerificationCode } from '../utils/sendVerificationCode.js';
 
 export const register = catchError(async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body || {};
 
     if (!name || !email || !password) {
       return next(new ErrorHandler('Please fill full form!', 400));
     }
 
-    const isRegistered = await User.find({ email, accountVerified: true });
+    const isRegistered = await User.findOne({ email, accountVerified: true });
 
     if (isRegistered) {
       return next(new ErrorHandler('User already exists!', 400));

@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer';
 import { config } from '../config/config.js';
+
+
 export async function snedEmail({ email, subject, message }) {
   const transpoter = nodemailer.createTransport({
     host: config.smtp_host,
