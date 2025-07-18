@@ -2,7 +2,6 @@ import { catchError } from '../middlewares/catchError.js';
 import ErrorHandler from '../middlewares/error.middleware.js';
 import { User } from '../models/user.model.js';
 import bcrypt from 'bcrypt';
-import crypto from 'crypto';
 
 export const register = catchError(async (req, res, next) => {
   try {
