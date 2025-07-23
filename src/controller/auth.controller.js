@@ -46,11 +46,12 @@ export const register = catchError(async (req, res, next) => {
   }
 });
 
-export const verifyOpt = catchError(async (req, res, next) => {
-  const { email, otp } = req.body;
+export const verifyOtp = catchError(async (req, res, next) => {
+
+  const { email, otp } = req.body || {};
 
   if (!email || !otp) {
-    return next(new ErrorHandler('EmIL or otp is missing', 400));
+    return next(new ErrorHandler('Email or otp is missing', 400));
   }
 
   try {
@@ -99,9 +100,7 @@ export const verifyOpt = catchError(async (req, res, next) => {
       validateModifiedOnly: true,
     });
 
-
-    sendToken(user, 200, "Account Verified.", res);
-
+    sendToken(user, 200, 'Account Verified.', res);
   } catch (error) {
     return next(new ErrorHandler('Internal server Error', error));
   }
