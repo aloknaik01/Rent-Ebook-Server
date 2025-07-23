@@ -44,3 +44,64 @@ export const register = catchError(async (req, res, next) => {
     return next(error);
   }
 });
+
+export const verifyOpt = catchError(async (req, res, next) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return next(new ErrorHandler('EmIL or otp is missing', 400));
+  }
+
+  try {
+    const userAllEntries = await User.find({ email, accountVerified: false }).sort({
+      createdAt: -1,
+    });
+
+    if (!userAllEntries) {
+      return next(new ErrorHandler('User not found!', 400));
+    }
+
+    let user;
+
+    if (userAllEntries > 1) {
+      user = userAllEntries[0];
+      await user.deleteMany({
+        _id: {
+          $ne: user._id,
+        },
+        email,
+        accountVerified: false,
+      });
+    } else {
+      user = userAllEntries[0];
+    }
+
+    if (user.verificationCode !== Number(otp)) {
+      return next(new ErrorHandler('invalid otp', 400));
+    }
+
+    const currentTime = Date.now();
+
+    const verificationCodeExpire = new Date(user.verificationCodeExpire).getTime();
+
+    if (currentTime > verificationCodeExpire) {
+      return next(new ErrorHandler('OTP expired', 400));
+    }
+
+    user.accountVerified = true;
+    user.verificationCode = null;
+    user.verificationCodeExpire = null;
+
+    await user.save();
+
+    await user.save({
+      validateModifiedOnly: true,
+    });
+
+
+    sendToken(user, 200, "Account Verified.", res);
+
+  } catch (error) {
+    return next(new ErrorHandler('Internal server Error', error));
+  }
+});
