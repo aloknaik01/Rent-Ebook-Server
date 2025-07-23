@@ -10,7 +10,6 @@ const _config = {
   smtp_service: process.env.SMTP_SERVICE,
   smtp_mail: process.env.SMTP_MAIL,
   smtp_password: process.env.SMTP_PASSWORD,
-  smtp_user: process.env.USER_ID,
 };
 
 export const config = Object.freeze(_config);
