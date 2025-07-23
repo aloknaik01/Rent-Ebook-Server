@@ -3,6 +3,7 @@ import ErrorHandler from '../middlewares/error.middleware.js';
 import { User } from '../models/user.model.js';
 import bcrypt from 'bcrypt';
 import { sendVerificationCode } from '../utils/sendVerificationCode.js';
+import { sendToken } from '../utils/sendToken.js';
 
 export const register = catchError(async (req, res, next) => {
   try {

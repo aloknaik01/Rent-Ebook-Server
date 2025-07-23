@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-
+import jwt from 'jsonwebtoken';
+import { config } from '../config/config.js';
 const useSchema = new mongoose.Schema(
   {
     name: {
@@ -71,4 +72,17 @@ useSchema.methods.generateVerificationCode = function () {
 
   return verificationCode;
 };
+
+useSchema.methods.generateToken = function () {
+  return jwt.sign(
+    {
+      id: this.id,
+    },
+    config.jwt_secret_key,
+    {
+      expiresIn: config.cookie_expires,
+    }
+  );
+};
+
 export const User = mongoose.model('User', useSchema);
