@@ -105,6 +105,7 @@ export const verifyOtp = catchError(async (req, res, next) => {
   }
 });
 
+//login
 export const login = catchError(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -124,4 +125,18 @@ export const login = catchError(async (req, res, next) => {
   }
 
   sendToken(user, 200, 'User logged in successfully', res);
+});
+
+//logout
+export const logout = catchError(async (req, res, next) => {
+  res
+    .status(200)
+    .cookie('token', '', {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    })
+    .json({
+      success: true,
+      message: 'Logged out successfully',
+    });
 });
