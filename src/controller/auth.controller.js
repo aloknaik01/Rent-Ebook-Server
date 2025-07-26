@@ -47,7 +47,6 @@ export const register = catchError(async (req, res, next) => {
 });
 
 export const verifyOtp = catchError(async (req, res, next) => {
-
   const { email, otp } = req.body || {};
 
   if (!email || !otp) {
@@ -104,4 +103,25 @@ export const verifyOtp = catchError(async (req, res, next) => {
   } catch (error) {
     return next(new ErrorHandler('Internal server Error', error));
   }
+});
+
+export const login = catchError(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new ErrorHandler('Please enter all fields', 400));
+  }
+
+  const user = await User.findOne({ email, accountVerified: true }).select('password');
+
+  if (!user) {
+    return next(new ErrorHandler('Invalid Email or Password', 400));
+  }
+
+  const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordMatched) {
+    return next(new ErrorHandler('Invalid Email or Password', 400));
+  }
+
+  sendToken(user, 200, 'User logged in successfully', res);
 });
