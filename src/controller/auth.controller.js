@@ -4,6 +4,9 @@ import { User } from '../models/user.model.js';
 import bcrypt from 'bcrypt';
 import { sendVerificationCode } from '../utils/sendVerificationCode.js';
 import { sendToken } from '../utils/sendToken.js';
+import { config } from '../config/config.js';
+import { generateForgotPassTemplate } from '../utils/emailTemplate.js';
+import { snedEmail } from '../utils/snedEmail.js';
 
 export const register = catchError(async (req, res, next) => {
   try {
@@ -148,4 +151,44 @@ export const getUser = catchError(async (req, res, next) => {
     success: true,
     user,
   });
+});
+
+//forgot-password
+
+export const forgotPass = catchError(async (req, res, next) => {
+  if (!req.body.email) {
+    return next(new ErrorHandler('Email is required!', 400));
+  }
+  const user = await User.findOne({ email: req.body.email, accountVerified: true });
+
+  if (!user) {
+    return next(new ErrorHandler('Invalid Email!', 400));
+  }
+
+  const resetPassToken = user.getResetPassToken();
+
+  await user.save({ validateBeforeSave: false });
+
+  const resetPassUrl = `${config.portfolio_url}/password/reset/${resetPassToken}`;
+
+  const message = generateForgotPassTemplate(resetPassUrl);
+
+  try {
+    await snedEmail({
+      email: user.email,
+      subject: 'Rent Ebook Password Recovery',
+      message,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Email send to ${user.email} successfuly`,
+    });
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordTokenExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(new ErrorHandler(error.message, 500));
+  }
 });

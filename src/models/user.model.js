@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/config.js';
-const useSchema = new mongoose.Schema(
+import crypto from 'crypto';
+
+const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -57,7 +59,7 @@ const useSchema = new mongoose.Schema(
   }
 );
 
-useSchema.methods.generateVerificationCode = function () {
+userSchema.methods.generateVerificationCode = function () {
   function gneraeteRandom5digitCode() {
     const firstDigit = Math.floor(Math.random() * 9) + 1;
     const restDigits = Math.floor(Math.random() * 1000)
@@ -73,7 +75,7 @@ useSchema.methods.generateVerificationCode = function () {
   return verificationCode;
 };
 
-useSchema.methods.generateToken = function () {
+userSchema.methods.generateToken = function () {
   return jwt.sign(
     {
       id: this.id,
@@ -85,4 +87,12 @@ useSchema.methods.generateToken = function () {
   );
 };
 
-export const User = mongoose.model('User', useSchema);
+userSchema.methods.getResetPassToken = function () {
+  const reseToken = crypto.randomBytes(20).toString('hex');
+  this.resetPasswordToken = crypto.createHash('sha256').update(reseToken).digest('hex');
+
+  this.resetPasswordTokenExpire = Date.now() + 15 * 60 * 1000;
+  return reseToken;
+};
+
+export const User = mongoose.model('User', userSchema);
